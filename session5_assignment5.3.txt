@@ -1,0 +1,209 @@
+package Employeedetails;
+import java.util.*;
+abstract public class Employee 
+{
+int empid;
+String empname;
+static int total_leaves=33;
+double total_salary;
+double basic_salary;
+int leaves_taken,leavestaken;
+
+abstract void calculate_balance_leaves();
+abstract boolean avail_leave(int no_of_leaves, char type_of_leave);
+abstract void calculate_salary();
+
+void getdetailsofemployee()
+{
+	Scanner sp=new Scanner(System.in);
+	System.out.print("Enter the name of employee:");
+    empname=sp.nextLine();
+	System.out.print("Enter the employee id:");
+	empid=sp.nextInt();
+	System.out.print("Enter the basic salary of employee:");
+	basic_salary=sp.nextDouble();
+	System.out.print("Enter the number of leaves taken:");
+	leaves_taken=sp.nextInt();	
+}
+
+}
+
+
+class permanentemp extends Employee
+{
+	static int paid_leave=23, sick_leave=7, casual_leave=10;
+	int mypaid_leave,mysick_leave,mycasual_leave;
+	double basic, hra,pf;
+	
+	
+	void getleavedetails()
+	{
+	    Scanner s=new Scanner(System.in);
+		System.out.println("Enter the number of paid leaves: ");
+		mypaid_leave=s.nextInt();
+		System.out.println("Enter the number of sick leaves:");
+		mysick_leave=s.nextInt();
+		System.out.println("Enter the number of casual_leaves:");
+		mycasual_leave=s.nextInt();
+		leavestaken=paid_leave+sick_leave+casual_leave;
+		print_leave_details();		
+	}
+		void print_leave_details()
+		{
+			System.out.println("The leave details as enterd by employee are:");
+			System.out.println(" Paid_leave:" +mypaid_leave);
+			System.out.println(" Sick_leave:" +mysick_leave);
+			System.out.println(" Casual_leave:"+mycasual_leave);
+						
+		    	    	
+			}
+		
+	    void calculate_balance_leaves()
+	    {
+	    	System.out.println("--------Balance leave--------");
+	    paid_leave=paid_leave-mypaid_leave;	   
+	    System.out.println("Paid leave"+paid_leave);
+	    sick_leave=sick_leave-mysick_leave;
+	    System.out.println("Sick leave"+sick_leave);
+	    casual_leave=casual_leave-mycasual_leave;
+	    System.out.println("Casual leave"+casual_leave);
+	    	
+	    }
+		boolean avail_leave(int no_of_leaves, char type_of_leave)
+		{
+			if(type_of_leave=='P' && (paid_leave-no_of_leaves)!=0)
+			{
+				System.out.println("Leave Approved");
+				return true;		
+			}				
+			
+			
+			else if(type_of_leave=='S' && (sick_leave-no_of_leaves)!=0)
+			{
+				System.out.println("Leave Approved");
+				return true;		
+			}				
+			
+			else if(type_of_leave=='C' && (casual_leave-no_of_leaves)!=0)
+			{
+				System.out.println("Leave Approved");
+				return true;		
+			}		
+			else
+				System.out.println("Sorry!!Leave not approved");
+			return false;
+			
+		}
+		
+		void calculate_salary() 
+		{
+		
+		     pf=basic_salary*0.12;
+		     hra=basic_salary*0.5;
+		     total_salary=basic_salary+hra-pf;
+		     System.out.println("Total salary:" +total_salary);			
+		}
+			
+}
+
+class temporaryemp extends Employee
+{
+
+	void getdetailsofemployee()
+	{
+		Scanner sp=new Scanner(System.in);
+		System.out.print("Enter the name of Temporary employee:");
+	    empname=sp.nextLine();
+		System.out.print("Enter the Temporary employee id:");
+		empid=sp.nextInt();
+		System.out.print("Enter the basic salary of employee:");
+		basic_salary=sp.nextDouble();
+		System.out.print("Enter the number of leaves taken:");
+		leaves_taken=sp.nextInt();	
+				
+	}
+	
+	void calculate_balance_leaves() 
+	{
+		System.out.println("Balance number of leaves for temporary employee is:" +(total_leaves-leaves_taken));
+		
+	}
+
+	
+	boolean avail_leave(int no_of_leaves, char type_of_leave) 
+	{
+		
+		if(type_of_leave=='Y' && (total_leaves-no_of_leaves)!=0)
+		{
+			System.out.println("Leave Approved");
+			return true;
+		}
+		else
+			System.out.println("Sorry");
+		return false;
+	}
+
+	
+	void calculate_salary() 
+	{
+		total_salary=basic_salary;
+	    System.out.println("Salary of temorary employee is:" +total_salary);	
+		
+	}
+	
+}
+
+
+
+
+package Employeedetails;
+
+import java.util.Scanner;
+
+public class employeedetails {
+	public static void main(String[] args)
+	{
+		permanentemp pe=new permanentemp();
+		pe.getdetailsofemployee();
+		pe.getleavedetails();
+		pe.calculate_salary();
+		pe.calculate_balance_leaves();
+		
+		System.out.println("To avail leave select 'Y' for yes and 'N' for no");
+		System.out.println("'P' for Paid leave,selct 'S' for Sick leave and select 'C' for Casual leave");
+		Scanner m=new Scanner(System.in);
+		char option=m.next().charAt(0);
+		if(option=='Y')
+		{
+		System.out.println("Enter the number of days of leave");
+		int val=m.nextInt();
+		System.out.println("Enter the type of leave:choose from the options given");
+		char x = m.next().charAt(0);
+		pe.avail_leave(val,x);
+		}else
+			System.out.println("Thank you");
+		System.out.println("-----------------------------------------------------------");
+		
+		temporaryemp te=new temporaryemp();
+		te.getdetailsofemployee();
+		te.calculate_balance_leaves();
+		System.out.println("To avail leave select either 'Y' or 'N");
+		char yt=m.next().charAt(0);
+		if(yt=='Y')
+		{
+		System.out.println("Enter number of days of Leave");
+	    int valt=m.nextInt();
+	    te.avail_leave(valt,yt);
+	    te.calculate_salary();
+	    
+		}
+		else
+			te.calculate_salary();
+			System.out.println("Thank you");
+		
+
+	}
+
+}
+
+
